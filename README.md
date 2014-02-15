@@ -8,3 +8,9 @@ Update binaries can be obtained from:
 * Coreboot: http://review.coreboot.org/gitweb?p=coreboot.git;a=tree;f=src/cpu;hb=HEAD
 * AMD: http://www.amd64.org/microcode.html
 * Intel: https://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22
+
+Listings of publicly available microcode updates are included:
+* amd.csv
+* amd_mapping.csv
+* intel.csv
+* via.csv

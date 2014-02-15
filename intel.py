@@ -22,9 +22,9 @@ class static():
 
     def data_header(swap_endian):
         if swap_endian:
-            return struct.Struct("<IIIIIIIIIiii")
+            return struct.Struct("<IIIIIIIIIIIIIIIIIIIIIIII")
         else:
-            return struct.Struct(">IIIIIIIIIiii")
+            return struct.Struct(">IIIIIIIIIIIIIIIIIIIIIIII")
 
     def extended_count(swap_endian):
         if swap_endian:
@@ -58,18 +58,13 @@ class microcode():
         extended = "Y" if self.is_extended else "N"
 
         return \
+        microparse.static.hex8(self.processor_signature) + "," + \
+        microparse.static.int2date(self.date) + "," + \
         microparse.static.hex8(self.header_version) + "," + \
         microparse.static.hex8(self.update_revision) + "," + \
-        microparse.static.int2date(self.date) + "," + \
-        microparse.static.hex8(self.processor_signature) + "," + \
-        microparse.static.hex8(self.checksum) + "," + \
-        microparse.static.hex8(self.loader_revision) + "," + \
         microparse.static.hex8(self.processor_flags) + "," + \
+        microparse.static.hex8(self.checksum) + "," + \
         str(int(self.data_size) * microparse.static.data(self.is_swap_endian).size) + "," + \
-        str(int(self.total_size) * microparse.static.data(self.is_swap_endian).size) + "," + \
-        microparse.static.hex8(self.unknown1) + "," + \
-        microparse.static.hex8(self.unknown2) + "," + \
-        microparse.static.hex8(self.unknown3) + "," + \
         data_extended + "," + \
         extended + "\n"
 
