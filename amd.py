@@ -184,7 +184,7 @@ class microcode():
         microparse.static.int2date(self.date) + "," + \
         microparse.static.hex8(self.patch_id) + "," + \
         microparse.static.hex8(self.patch_data_id) + "," + \
-        str(int(self.patch_data_len) * microparse.static.data(self.is_swap_endian).size) + "," + \
+        microparse.static.hex8(int(self.patch_data_len) * microparse.static.data(self.is_swap_endian).size) + "," + \
         microparse.static.hex8(self.init_flag) + "," + \
         microparse.static.hex8(self.patch_data_checksum) + "," + \
         microparse.static.hex8(self.nb_dev_id) + "," + \

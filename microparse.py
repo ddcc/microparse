@@ -107,7 +107,7 @@ def open_path(path):
         data = b""
         static.tprint("Parsing " + path)
 
-        if path.endswith((".dat", ".bin", ".txt", ".pdb", ".PDB", ".cfg", ".h")):
+        if path.endswith((".dat", ".bin", ".txt", ".pdb", ".PDB", ".cfg", ".h", ".c")):
             with open(path, "rb") as f:
                 data = f.read()
 
