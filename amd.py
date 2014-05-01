@@ -175,16 +175,23 @@ class microcode():
         self.total_size = size
 
         self.parse_header(data[0 : static.header(self.is_swap_endian).size])
-        self.parse_data(data[static.header(self.is_swap_endian).size : self.total_size])
+        
+        if (self.total_size != 0):
+            self.parse_data(data[static.header(self.is_swap_endian).size : self.total_size])
+            self.raw = data[0 : self.total_size]
+        else:
+            # don't both parsing data, since we can't calculate checksum for encrypted microcode anyway
+            self.total_size = len(data)
 
-        self.raw = data[0 : self.total_size]
+            self.data = []
+            self.raw = data[0 : ]
 
     def csv(self):
         return \
         microparse.static.int2date(self.date) + "," + \
         microparse.static.hex8(self.patch_id) + "," + \
         microparse.static.hex8(self.patch_data_id) + "," + \
-        microparse.static.hex8(int(self.patch_data_len) * microparse.static.data(self.is_swap_endian).size) + "," + \
+        microparse.static.hex8(self.patch_data_len) + "," + \
         microparse.static.hex8(self.init_flag) + "," + \
         microparse.static.hex8(self.patch_data_checksum) + "," + \
         microparse.static.hex8(self.nb_dev_id) + "," + \
@@ -223,8 +230,8 @@ class microcode():
             self.patch_data_id = header[2]
             self.patch_data_len = header[3]
             # attempt to compute total size, will fail for newer encrypted microcode with patch_data_len = 0
-            if self.total_size == 0:
-                self.total_size = static.header(self.is_swap_endian).size + self.patch_data_len * microparse.static.data(self.is_swap_endian).size * static.TRIAD_SIZE
+            # if self.total_size == 0 and self.patch_data_len != 0:
+            #     self.total_size = static.header(self.is_swap_endian).size + self.patch_data_len * microparse.static.data(self.is_swap_endian).size * static.TRIAD_SIZE
             self.init_flag = header[4]
             self.patch_data_checksum = header[5]
             self.nb_dev_id = header[6]
@@ -268,7 +275,7 @@ class microcode():
             raise Exception("Input microcode data size mismatch!")
 
     def calculate_checksum(self):
-        return sum(self.data) & 0xFFFFFFFF
+        return (sum(self.data) & 0xFFFFFFFF) if self.data else 0
 
     def __str__(self):
         fmt_string = ".... %-25s: %s\n"
